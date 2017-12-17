@@ -1,14 +1,23 @@
-the_wall.controller('userController', function() {
+the_wall.controller('userController', function(userFactory) {
   
   
-  this.users = [
-    "Jesse",
-    "Michel",
-    "Michael",
-    "Mikaela",
-    "Mike",
-    "Jesus"
-  ];
+  // this.users = [
+  //   "Jesse",
+  //   "Michel",
+  //   "Michael",
+  //   "Mikaela",
+  //   "Mike",
+  //   "Jesus"
+  // ];
+
+  this.users = [];
+
+  var _this = this;
+  userFactory.index(function(data) {
+    console.log(data);
+    _this.users = data;
+  })
+
 
   this.addUser = function() {
     console.log('addUser functioon is workinig')
@@ -22,6 +31,7 @@ the_wall.controller('userController', function() {
       console.log(this.users[i])
       if(this.users[i] === this.newUser.name) {
         console.log('User already exists, setting user')
+        break;
         userAlreadyExists = true;
 
       }
@@ -30,7 +40,18 @@ the_wall.controller('userController', function() {
     if(userAlreadyExists == false) {
       
       console.log('adding new user to existing array')
-      this.users.push(this.newUser.name)
+      
+      var _this = this;
+      userFactory.create(this.newUser, function() {
+        userFactory.index(function(data) {
+          _this.users = data;
+        })
+
+      }, function(output) {
+        console.log('Received from factory user creation')
+        console.log(output) 
+        
+      })
       console.log(this.users)
     }
 
