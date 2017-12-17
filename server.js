@@ -19,6 +19,9 @@ routes_setter(app)
 
 app.use(express.static(path.join(__dirname, "./client")))
 
+//used to add the bower scripts from the index html page
+app.use('/bower_components',  express.static(__dirname + '/bower_components'))
+
 var server = app.listen(8000, function() {
   console.log('Listening on port 8000....')
 })
