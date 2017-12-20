@@ -1,4 +1,4 @@
-the_wall.controller('userController', function(userFactory) {
+the_wall.controller('userController', function(userFactory, $cookies, $location) {
   
   
   // this.users = [
@@ -12,12 +12,20 @@ the_wall.controller('userController', function(userFactory) {
 
   this.users = [];
 
+  if($cookies.get('userId')) {
+    console.log('User removed from session')
+    $cookies.remove('userId')
+  }
+
   var _this = this;
   userFactory.index(function(data) {
     console.log(data);
     _this.users = data;
   })
 
+  this.go = function(path) {
+    $location.path(path);
+  }
 
   this.addUser = function() {
     console.log('addUser functioon is workinig')
@@ -31,8 +39,13 @@ the_wall.controller('userController', function(userFactory) {
       console.log(this.users[i])
       if(this.users[i] === this.newUser.name) {
         console.log('User already exists, setting user')
-        break;
+        // $cookies.put('userId', this.users[id]._id);
+        $cookies.put('userName', this.users[i]);
         userAlreadyExists = true;
+        // console.log($cookies.get('userId'))
+        console.log($cookies.get('userName'))
+        this.go('/dashboard')
+        break;
 
       }
     }
@@ -50,7 +63,10 @@ the_wall.controller('userController', function(userFactory) {
       }, function(output) {
         console.log('Received from factory user creation')
         console.log(output) 
-        
+
+        // $cookies.put('userId', output._id)
+        $cookies.put('userName', output)
+        _this.go('/dashboard')
       })
       console.log(this.users)
     }

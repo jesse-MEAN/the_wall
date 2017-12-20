@@ -15,6 +15,7 @@ the_wall.factory('userFactory', function($http) {
     }
 
     factory.create = function(info, callback, callback2) {
+        console.log('Got the info from controller' + info.name)
         users.push(info.name)
         callback(users);
 
